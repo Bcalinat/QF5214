@@ -1,52 +1,14 @@
-import nltk
-from nltk.sentiment import SentimentIntensityAnalyzer
 import requests
 import mysql.connector
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime
+from urllib.parse import quote
 
 Comps = ["MSFT", "AAPL", "NVDA", "AVGO", "BRK-B", "JPM",
          "LLY", "UNH", "AMZN", "GE", "GOOG", "WMT", "XOM", "LIN",]
 
-nltk.download('vader_lexicon')
-sia = SentimentIntensityAnalyzer()
-
-# newsapi return example:
-# {'status': 'ok',
-#  'totalResults': 123,
-#  'articles': [{'source': {'id': None, 'name': 'Biztoc.com'},
-#    'author': 'investors.com',
-#    'title': "xxxxxx",
-#    'description': 'xxxxx',
-#    'url': 'https://xxxxx',
-#    'urlToImage': 'https://xxxxxxx',
-#    'publishedAt': '2024-03-01T23:28:14Z',
-#    'content': "xxxxx"},
-#  ]
-# }
-
-# use example -> get_news("MSFT", "2024-03-01", "2022-04-01")
-
-
-def get_news_by_newsapi(query: str, fromTime: str, toTime: str):
-    api_key = '490c4bd988b94431886ee1bd945a5e11'
-    url = 'https://newsapi.org/v2/everything'
-    params = {
-        'q': query,
-        'from': fromTime,
-        'to': toTime,
-        'sortBy': 'publishedAt',
-        'apiKey': api_key
-    }
-    response = requests.get(url, params=params)
-    data = response.json()
-    resp = []
-    for i in data['articles']:
-        resp.append({
-            'content': i['content'],
-            'url': i['url'],
-            'publishedAt': i['publishedAt'],
-            'title': i['title']
-        })
-    return resp
 
 # example of get_news_by_alphavantage returns
 # {
@@ -95,46 +57,59 @@ def get_news_by_newsapi(query: str, fromTime: str, toTime: str):
 def get_news_by_alphavantage(query: str, fromTime: str, toTime: str, limit: int = 51):
     def convert_date_format(date_str):
         date_pieces = date_str.split('-')
+        month = {'1':'01', '2':'02', '3':'03', '4':'04', '5':'05', '6':'06', '7':'07', '8':'08', '9':'09', '10':'10', '11':'11', '12':'12'}
+        date_pieces[1] = month.get(date_pieces[1], date_pieces[1])  
         return f"{date_pieces[0]}{date_pieces[1]}{date_pieces[2]}T0000"
+    
     apiKey = '5AUQ5HPEMD1DV66G'
     url = f'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers={query}&limit={limit}&apikey={apiKey}&time_from={convert_date_format(fromTime)}&time_to={convert_date_format(toTime)}'
     r = requests.get(url)
     data = r.json()
     return data
 
+def convert_date_format(date_str):
+    date_pieces = date_str.split('-')
+    month = {'1':'01', '2':'02', '3':'03', '4':'04', '5':'05', '6':'06', '7':'07', '8':'08', '9':'09', '10':'10', '11':'11', '12':'12'}
+    date_pieces[1] = month.get(date_pieces[1], date_pieces[1])  # 使用 get 方法获取字典值，若不存在则返回原值
+    return f"{date_pieces[0]}{date_pieces[1]}{date_pieces[2]}T0000"
+
+# get_month_news_for_company: 对股票(公司)名，获取从202X到202X年每个月的新闻打分细节
+def get_month_news_for_company(compName: str, startYear: int, endYear: int):
+	news = []
+	for y in range(startYear, endYear + 1): # 遍历从202X到202X年
+		m = 1
+		while m <= 12: # 遍历12个月
+            
+			if y == 2022 and m < 3:
+				m = 3
+			if y ==2024 and m >3:
+				break
+			if m == 12:
+				comp_news = get_news_by_alphavantage(compName, f'{y}-{m}-01', f'{y+1}-01-01')
+				print('compName:',compName, f'{y}-{m}-01', f'{y+1}-01-01')
+			else:
+				comp_news = get_news_by_alphavantage(compName, f'{y}-{m}-01', f'{y}-{m+1}-01')
+				print('compName:',compName, f'{y}-{m}-01', f'{y}-{m+1}-01')
+			print(comp_news)
+			print(convert_date_format(f'{y}-{m}-01'))
+			for artical in comp_news['feed']:
+				news.append({
+					'name': compName,
+					'url': artical['url'],
+					'publishedAt': artical['time_published'],
+					'compound': artical['overall_sentiment_score'],
+				})
+			m+=1
+	return news
+
+# 获取所有公司的记录
+def get_month_news_for_companies(comps: list, startYear: int, endYear: int):
+    return [get_month_news_for_company(comp, startYear, endYear) for comp in comps]
+
+
 # get_score return example: {'neg': 0.0, 'neu': 1.0, 'pos': 0.0, 'compound': 0.0}
 # compound 是最终打分，大于0为正面，小于0为负面
 
-
-def get_score(text: str):
-    score = sia.polarity_scores(text)
-    return score
-
-# get_month_news_for_company: 对股票(公司)名，获取从202X到202X年每个月的新闻打分细节
-
-
-def get_month_news_for_company(compName: str, startYear: int, endYear: int):
-    news = []
-    for y in range(startYear, endYear + 1):  # 遍历从202X到202X年
-        for m in range(1, 12):  # 遍历12个月
-    
-            comp_news = get_news_by_newsapi(
-                compName, f'{y}-{m}-1', f'{y}-{m+1}-1')
-            for artical in comp_news['articles']:
-                score = get_score(artical['content'])  # 这里是打分逻辑
-                news.append({
-                    'name': compName,
-                    'url': artical['url'],
-                    'publishedAt': artical['publishedAt'],
-                    'compound': score['compound'],
-                })
-    return news
-
-# 获取所有公司的记录
-
-
-def get_month_news_for_companies(comps: list, startYear: int, endYear: int):
-    return [get_month_news_for_company(comp, startYear, endYear) for comp in comps]
 
 
 def create_mysql_table():
