@@ -60,36 +60,10 @@ SELECT 'LIN' as symbol,DATE_FORMAT(date,'%Y%m%d') as date, LIN as search_popular
 FROM search_popularity;
 
 -- 3. sentiment_daily
+-- python
 
+-- 4.stock_price
+-- python
 
--- 4. merge
-SELECT y.symbol, DATE_FORMAT(y.date,'%Y%m%d') as date,s.date, esg_score, search_popularity
-FROM new_yahoo_esg_score y
-FULL OUTER JOIN search_popularity_rows s 
-ON y.symbol = s.symbol 
-AND DATE_FORMAT(y.date,'%Y%m%d')  = s.date 
-ORDER BY y.date;
-
-SELECT y.symbol, DATE_FORMAT(y.date,'%Y%m%d') as date,esg_score
-FROM new_yahoo_esg_score y;
-
-SELECT * FROM search_popularity_rows;
-
-SELECT COALESCE(e.symbol, s.symbol) AS symbol,
-       COALESCE(e.date, s.date) AS date,
-       e.esg_score,
-       s.search_popularity
-FROM new_yahoo_esg_score e
-LEFT JOIN search_popularity_rows s ON e.symbol = s.symbol AND e.date = s.date
-UNION
-SELECT COALESCE(e.symbol, s.symbol) AS symbol,
-       COALESCE(e.date, s.date) AS date,
-       e.esg_score,
-       s.search_popularity
-FROM new_yahoo_esg_score e
-RIGHT JOIN search_popularity_rows s ON e.symbol = s.symbol AND e.date = s.date
-WHERE e.symbol IS NULL;
-
--- 5.stock_price
-SELECT * FROM aapl_price
-LIMIT 10;
+-- 5. merge
+--python
