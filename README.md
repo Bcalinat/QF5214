@@ -12,3 +12,5 @@
 7. industry_summary_monthly
 8. industry_summary_yearly
 9. industry_index_summary
+
+![](./img/schema.png)
