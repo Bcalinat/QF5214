@@ -37,6 +37,7 @@ Financial Statement data is provided by Yahoo Finance, containing income stateme
 Trend of macroeconomic indicators could be rather important for stock price prediction since they can reveal the state of macroeconomics and further influence investors’ perspective of the future. Consequently, we calculate the year-on-year and month-on-month growth of CPI, core-CPI, PPI and PMI. 
 ### Industry Data
 ![](./img/industry.png)
+
 We have computed specific indices for each of the 11 sectors defined by the Global Industry Classification Standard (GICS), including Information Technology, Healthcare, Financials, Energy, Consumer Discretionary, Industrials, Communication Services, Materials, Real Estate, Utilities, and Consumer Staples. When integrating industry data, we have categorized it into three different frequency dimensions: annual, monthly, and daily, to account for variations in data frequency.
 Among these, annual and monthly data include OECD data and Prosperity Indicators Data computed from financial data. Daily data includes ETF data.
 - **For OECD data**
@@ -90,8 +91,18 @@ Additionally, since raw data from financial statements is too much and yearly-ba
 After that, we further preprocess features to fulfill NULLs and standardize those with extreme ranges. We first impute missing values in ESG scores and sentiment scores by using KNNImputer from sklearn. We then StandardScaler from sklearn to standardize all numerical values. 
 ### Feature Selection
 Now we have a total number of 78 features and it is significant to eliminate some to prevent overfitting and reduce training time. Consequently, we apply CatBoost for feature selection and compare model performance with different number of features reserved. After comparing between 15, 20, 30 and 45 features, we finally decide to reserve 20 features in total and the result is shown as follow.
-![](./img/feature1.png)![](./img/feature2.png)
-![](./img/feature3.png)![](./img/feature4.png)
+
+<table>
+  <tr>
+    <td><img src="./img/feature1.png"></td>
+    <td><img src="./img/feature2.png"></td>
+  </tr>
+  <tr>
+    <td><img src="./img/feature3.png"></td>
+    <td><img src="./img/feature4.png"></td>
+  </tr>
+</table>
+
 ### Regression
 We have a total 20 features using CatBoost as explained in the previous part. The next step is to generate labels. Because of the limitation of our sample sizes and computational expense, instead of directly using stock return as label, we instead set a dummy variable that indicate stock movement, 1 for stock price going up and 0 for going down. 
 After careful consideration, we decide to choose LightGBM, one of the most widely used due to its widespread adoption in quantitative finance and its capability to efficiently handle large datasets, providing fast training speeds and accurate predictions.
@@ -107,10 +118,10 @@ Finally, we apply MAE and RMSE to assess the performance of our model. The resul
 ## Future Work
 Looking ahead, our focus will be on refining our database and embracing advanced data processing techniques to enhance stock price prediction capabilities:
 ### Database Enhancement
--  Real-Time Data Integration: We plan to incorporate real-time data streams to keep our database current with market changes, increasing the timeliness and relevance of the information.
-- Diverse Data Sources: Expanding our database to include a broader range of data types such as transactional data from exchanges, economic reports.
+-  **Real-Time Data Integration**: We plan to incorporate real-time data streams to keep our database current with market changes, increasing the timeliness and relevance of the information.
+- **Diverse Data Sources**: Expanding our database to include a broader range of data types such as transactional data from exchanges, economic reports.
 
 ### Advanced Data Processing
-- Enhanced Data Handling: We will upgrade our infrastructure to efficiently manage and process larger datasets, enabling more comprehensive analysis.
-- Machine Learning Enhancements: Implementing more sophisticated machine learning algorithms such as deep learning or reinforcement learning could uncover deeper patterns and relationships within the data.
+- **Enhanced Data Handling**: We will upgrade our infrastructure to efficiently manage and process larger datasets, enabling more comprehensive analysis.
+- **Machine Learning Enhancements**: Implementing more sophisticated machine learning algorithms such as deep learning or reinforcement learning could uncover deeper patterns and relationships within the data.
 
