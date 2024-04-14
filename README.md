@@ -95,12 +95,12 @@ Now we have a total number of 78 features and it is significant to eliminate som
 
 <table>
   <tr>
-    <td><img src="./img/feature1.png"></td>
-    <td><img src="./img/feature2.png"></td>
+    <td><img src="./img/feature1.jpg"></td>
+    <td><img src="./img/feature2.jpg"></td>
   </tr>
   <tr>
-    <td><img src="./img/feature3.png"></td>
-    <td><img src="./img/feature4.png"></td>
+    <td><img src="./img/feature3.jpg"></td>
+    <td><img src="./img/feature4.jpg"></td>
   </tr>
 </table>
 
