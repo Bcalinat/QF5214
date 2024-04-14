@@ -13,11 +13,12 @@ Specifically, our database incorporates five critical indexes that are instrumen
 ### Industry Data
 The Global Industry Classification Standard (GICS) categorizes the global market into 11 sectors. We use the 11 sectors outlined by the GICS, including Information Technology, Healthcare, Financials, Energy, Consumer Discretionary, Industrials, Communication Services, Materials, Real Estate, Utilities, and Consumer Staples. Each sector is further subdivided into specific sub-industries, providing us with a comprehensive and extensive framework for analyzing and understanding the performance and trends of different industries.
 Based on the GICS classification, we have gathered industry data from three primary sources:
-(1)OECD Statistical Data: 
+
+- **OECD Statistical Data**
 We have selected industry data from the Organization for Economic Co-operation and Development (OECD) statistics, focusing on key sectors such as Health Care, Industrials, Financials, and Real Estate. These indicators include Real Estate Production Index and Real Estate Work Index for the Real Estate sector; Industrial Production Index and Car Index for Industrials sector; outstanding loans, interest rates, capital investment for Financials sector, and other. By utilizing OECD data, we gain access to broader and more detailed industry information, enabling us to better analyze industry performance and trends.
-(2)Prosperity indicators Data for Each Industry:
+- **Prosperity indicators Data for Each Industry**
 Prosperity indicators are mainly used to analyze the degree of prosperity of a market. Prosperity indicators can provide investors with important information for decision-making and reference. We have constructed periodic performance indicators, which are built based on the official financial reports of individual stocks, and integrated the data of individual stocks into industry indicators through the overall method. The official financial reports cover all listed companies and contain a wealth of information.
-(3)ETF Data for Each Industry: 
+- **ETF Data for Each Industry**
 Industry ETFs are funds designed to track the performance of a basket of stocks within a specific sector. They offer investors a convenient way to invest in particular industries, covering sectors such as technology, finance, healthcare, and more. Through industry ETF data, trends, market sentiment, and risk conditions within specific industries can be observed. The reasons for incorporating industry ETF data into individual stock price prediction models include capturing industry factors, reflecting market sentiment and trends, assessing industry risk factors, and analyzing the correlation between individual stocks and their respective industries. Therefore, integrating industry ETF data can enhance the explanatory power and accuracy of prediction models, providing more reliable insights for investment decisions.
 
 ### Company operational Data
